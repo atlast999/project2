@@ -2,22 +2,31 @@ package model;
 
 import java.util.ArrayList;
 
+import repository.DatabaseInteraction;
+
 public class Topic {
 	private int level;
+	private int topicId;
+
 	private String name;
 	//TODO should be long
-	private String length = "xx";
-	private String demostration = "xxxxxxxxxxxxx";
+	private int length;
+	private String description = "xxxxxxxxxxxxx";
 	private ArrayList<Track> trackList;
 	
-	public Topic(int level, String name) {
+	public Topic(String name, String description, int level) {
 		this.level = level;
 		this.name = name;
+		this.description = description;
 		//TODO not like this
 		trackList = new ArrayList<Track>();
-		trackList.add(new Track());
+		trackList = DatabaseInteraction.getInstance().getTrackByTopic(topicId);
 	}
 
+	public Topic() {
+
+	}
+	
 	public int getLevel() {
 		return level;
 	}
@@ -34,20 +43,20 @@ public class Topic {
 		this.name = name;
 	}
 
-	public String getLength() {
+	public int getLength() {
 		return length;
 	}
 
-	public void setLength(String length) {
+	public void setLength(int length) {
 		this.length = length;
 	}
 
-	public String getDemostration() {
-		return demostration;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDemostration(String demostration) {
-		this.demostration = demostration;
+	public void setDescription(String descripton) {
+		this.description = descripton;
 	}
 
 	public ArrayList<Track> getTrackList() {
@@ -58,5 +67,14 @@ public class Topic {
 		this.trackList = trackList;
 	}
 	
-	
+	public int getTopicId() {
+		return topicId;
+	}
+
+	public void setTopicId(int topicId) {
+		this.topicId = topicId;
+		trackList = new ArrayList<Track>();
+		trackList = DatabaseInteraction.getInstance().getTrackByTopic(topicId);
+	}
+
 }

@@ -6,6 +6,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 import controller.PracticingController;
@@ -40,6 +42,7 @@ public class Practicing extends JFrame {
 	private JTable tableListTopics;
 	private JTextField textFieldAnswer;
 	private JLabel lblTrack;
+	private JLabel lblScore;
 
 	public Practicing(int level) {
 		controller = new PracticingController(level);
@@ -78,7 +81,7 @@ public class Practicing extends JFrame {
 		scrollPane.setViewportView(tableListTopics);
 		//show table
 		controller.showTableListTopics(dtmListTopics);
-		//add event listener
+		//add event listener when user choose a topic
 		tableListTopics.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -87,10 +90,10 @@ public class Practicing extends JFrame {
 			}
 		});
 		JButton btnGo = new JButton("Let's go");
-		//add event listener
+		//add event listener when user click this button
 		btnGo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.startPracticing(textFieldAnswer, lblTrack);
+				controller.startPracticing(textFieldAnswer, lblTrack, lblScore);
 			}
 		});
 		panelTopicList.add(btnGo, BorderLayout.SOUTH);
@@ -112,8 +115,26 @@ public class Practicing extends JFrame {
 		panelPracticing.add(lblTrack, BorderLayout.NORTH);
 		
 		textFieldAnswer = new JTextField();
+		textFieldAnswer.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				controller.handleEnteredAnswer(textFieldAnswer);
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				//JOptionPane.showMessageDialog(null, "changed");
+			}
+		});
 		panelPracticing.add(textFieldAnswer, BorderLayout.SOUTH);
-		textFieldAnswer.setColumns(10);
+		textFieldAnswer.setColumns(20);
 		
 		JPanel panel = new JPanel();
 		panelPracticing.add(panel, BorderLayout.CENTER);
@@ -123,7 +144,14 @@ public class Practicing extends JFrame {
 		panel.add(lblContentTrack, BorderLayout.NORTH);
 		
 		JButton btnPlay = new JButton("Play");
+		//when user click play/pause
+		btnPlay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controller.handlePlayPauseButton(btnPlay);
+			}
+		});
 		btnPlay.setAlignmentY(Component.TOP_ALIGNMENT);
+		
 		panel.add(btnPlay);
 		
 		JPanel panelScore = new JPanel();
@@ -134,7 +162,7 @@ public class Practicing extends JFrame {
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		panelScore.add(lblNewLabel_1, BorderLayout.NORTH);
 		
-		JLabel lblScore = new JLabel("xx");
+		lblScore = new JLabel("xx");
 		lblScore.setHorizontalAlignment(SwingConstants.CENTER);
 		panelScore.add(lblScore, BorderLayout.CENTER);
 		

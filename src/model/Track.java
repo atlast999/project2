@@ -1,11 +1,13 @@
 package model;
 
 public class Track {
+	private int trackId;
 	private String fileName;
-	private String content[] = {"One", "two", "three", "four", "five"};
+	private String scripts[] = {"One", "two", "three", "four", "five"};
+	private String freeWords[] = {"Alexa"};
 	
 	public Track() {
-		this.fileName = "hi.mp3";
+		
 	}
 	public String getFileName() {
 		return fileName;
@@ -13,12 +15,25 @@ public class Track {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-	public String[] getContent() {
-		return content;
+	public int getTrackId() {
+		return trackId;
 	}
-	public void setContent(String[] content) {
-		this.content = content;
+	public void setTrackId(int trackId) {
+		this.trackId = trackId;
 	}
+	public String[] getScripts() {
+		return scripts;
+	}
+	public void setScripts(String[] scripts) {
+		this.scripts = scripts;
+	}
+	public String[] getFreeWords() {
+		return freeWords;
+	}
+	public void setFreeWords(String[] freeWords) {
+		this.freeWords = freeWords;
+	}
+
 	
 	
 }

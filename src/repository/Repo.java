@@ -17,18 +17,10 @@ public class Repo {
 	}
 	public Repo() {
 		//get data from database, not yet, just hard coding
-		initData();
+		//
+		listTopics = DatabaseInteraction.getInstance().getAllTopic();
 	}
 	
-	private void initData() {
-		listTopics = new ArrayList<Topic>();
-		//hard code for testing
-		for(int i = 0; i<5; i++) {
-			listTopics.add(new Topic(1, "topic" + i));
-			listTopics.add(new Topic(2, "topic" + i));
-			listTopics.add(new Topic(3, "topic" + i));
-		}
-	}
 	public ArrayList<Topic> getListTopics() {
 		return listTopics;
 	}
