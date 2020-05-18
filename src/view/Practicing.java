@@ -43,6 +43,8 @@ public class Practicing extends JFrame {
 	private JTextField textFieldAnswer;
 	private JLabel lblTrack;
 	private JLabel lblScore;
+	private JLabel lblContentTrack;
+	private JButton btnPlay;
 
 	public Practicing(int level) {
 		controller = new PracticingController(level);
@@ -93,7 +95,7 @@ public class Practicing extends JFrame {
 		//add event listener when user click this button
 		btnGo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.startPracticing(textFieldAnswer, lblTrack, lblScore);
+				controller.startPracticing(textFieldAnswer, lblTrack, lblScore, lblContentTrack, btnPlay);
 			}
 		});
 		panelTopicList.add(btnGo, BorderLayout.SOUTH);
@@ -140,14 +142,14 @@ public class Practicing extends JFrame {
 		panelPracticing.add(panel, BorderLayout.CENTER);
 		panel.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblContentTrack = new JLabel("Answer: ");
+		lblContentTrack = new JLabel("Answer: ");
 		panel.add(lblContentTrack, BorderLayout.NORTH);
 		
-		JButton btnPlay = new JButton("Play");
+		btnPlay = new JButton("Play");
 		//when user click play/pause
 		btnPlay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.handlePlayPauseButton(btnPlay);
+				controller.handlePlayPauseButton();
 			}
 		});
 		btnPlay.setAlignmentY(Component.TOP_ALIGNMENT);
