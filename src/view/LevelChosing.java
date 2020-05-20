@@ -2,7 +2,6 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -14,13 +13,12 @@ import controller.LevelController;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class LevelChosing extends JFrame implements MouseListener {
+	
+	private static final long serialVersionUID = 1L;
 	private LevelController controller;
 	private JPanel contentPane;
 	private JButton btnLevelOne , btnLevelTwo, btnLevelThree;
@@ -34,6 +32,7 @@ public class LevelChosing extends JFrame implements MouseListener {
 	 */
 	public LevelChosing() {
 		controller = new LevelController();
+		setLocationRelativeTo(null);
 		setTitle("Practice English listening skills");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 639, 486);

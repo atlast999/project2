@@ -49,6 +49,7 @@ public class Practicing extends JFrame {
 	public Practicing(int level) {
 		controller = new PracticingController(level);
 		
+		setLocationRelativeTo(null);
 		setTitle("Practice listening level "+level);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 865, 554);
@@ -78,7 +79,7 @@ public class Practicing extends JFrame {
 		dtmListTopics = new DefaultTableModel();
 		dtmListTopics.addColumn("Name");
 		dtmListTopics.addColumn("Length");
-		dtmListTopics.addColumn("Demostration");
+		dtmListTopics.addColumn("Description");
 		tableListTopics = new JTable(dtmListTopics);
 		scrollPane.setViewportView(tableListTopics);
 		//show table

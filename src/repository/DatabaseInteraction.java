@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import model.Topic;
 import model.Track;
+import utility.Util;
 
 public class DatabaseInteraction {
 	private static final String DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
@@ -62,13 +63,15 @@ public class DatabaseInteraction {
     	ArrayList<Track> list = new ArrayList<>();
         String select = "select * from track where topicId=?";
         try (
-                PreparedStatement ps = c.prepareStatement(select)) {
+            PreparedStatement ps = c.prepareStatement(select)) {
             ps.setInt(1, topicId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
             	Track track = new Track();
             	track.setFileName(rs.getString("fileName"));
             	track.setTrackId(rs.getInt("trackId"));
+            	track.setScripts(Util.convertStringToArray(rs.getString("script")));
+            	track.setFreeWords(Util.convertStringToArray(rs.getString("freeWord")));
                 list.add(track);
             }
         } catch (Exception e) {

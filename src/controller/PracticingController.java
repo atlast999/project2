@@ -14,6 +14,7 @@ import model.Topic;
 import model.Track;
 import repository.Repo;
 import utility.SoundPlayer;
+import utility.Util;
 
 public class PracticingController {
 	private ArrayList<Topic> listTopics;
@@ -44,7 +45,7 @@ public class PracticingController {
 		for (Topic topic : listTopics) {
 			Vector<Object> vec = new Vector<Object>();
 			vec.add(topic.getName());
-			vec.add(topic.getLength());
+			vec.add(Util.convertSecondToString(topic.getLength()));
 			vec.add(topic.getDescription());
 			dtmListTopics.addRow(vec);
 		}
@@ -90,7 +91,7 @@ public class PracticingController {
 		System.out.println(answer + " " + target + " " + currentChar);
 		String previousAnswer = answer.substring(0, answer.length() - 1);
 		currentChar = previousAnswer.length();
-		if (answer.charAt(currentChar) != target.charAt(currentChar)) {
+		if (Character.toLowerCase(answer.charAt(currentChar)) != Character.toLowerCase(target.charAt(currentChar))) {
 			Runnable doAssist = new Runnable() {
 	            @Override
 	            public void run() {
@@ -100,7 +101,7 @@ public class PracticingController {
 	        SwingUtilities.invokeLater(doAssist);
 		}
 		
-		if(answer.equals(target)) {
+		if(Util.areWordsMatching(answer, target)) {
 			currentWord++;
 			Runnable doAssist = new Runnable() {
 	            @Override
