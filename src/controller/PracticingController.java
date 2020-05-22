@@ -28,7 +28,7 @@ public class PracticingController {
 	private boolean isCurrentTrackFinished;
 	private boolean isCurrentTopicFinished;
 	private SoundPlayer player;
-	private JLabel lblTrack, lblAnswer;
+	private JLabel lblTrack, lblAnswer, lblScore;
 	private JButton btnPlay;
 	
 	public PracticingController(int level) {
@@ -59,6 +59,8 @@ public class PracticingController {
 		this.lblAnswer = lblAnswer;
 		this.lblTrack = lblTrack;
 		this.btnPlay = btnPlay;
+		this.lblScore = lblScore;
+		this.startingTime = Util.getCurrentTime();
 		JOptionPane.showMessageDialog(null, "You are ready for practicing: " + currentTopic.getName());
 		currentTrackNumber = 0;
 		updateLabelTrack();
@@ -91,6 +93,8 @@ public class PracticingController {
 		System.out.println(answer + " " + target + " " + currentChar);
 		String previousAnswer = answer.substring(0, answer.length() - 1);
 		currentChar = previousAnswer.length();
+		
+		
 		if (Character.toLowerCase(answer.charAt(currentChar)) != Character.toLowerCase(target.charAt(currentChar))) {
 			Runnable doAssist = new Runnable() {
 	            @Override
@@ -132,7 +136,9 @@ public class PracticingController {
 		lblAnswer.setText(result);
 	}
 	private void updateScoreLabel() {
-		
+		System.out.println(startingTime + " " + finishingTime);
+		String result = Util.calculateScore(finishingTime - startingTime, currentTopic.getLength());
+		lblScore.setText(result);
 	}
 	private void playFile(int trackNumber) {
 		//TODO code for playing mp3 file
@@ -158,6 +164,8 @@ public class PracticingController {
 
 	private void handleTopicFinished() {
 		isCurrentTopicFinished = true;
+		this.finishingTime = Util.getCurrentTime();
+		updateScoreLabel();
 		JOptionPane.showMessageDialog(null, "Done topic");
 	}
 }
