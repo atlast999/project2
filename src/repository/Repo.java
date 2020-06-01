@@ -1,6 +1,7 @@
 package repository;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import model.Topic;
 
@@ -23,5 +24,9 @@ public class Repo {
 	
 	public ArrayList<Topic> getListTopics() {
 		return listTopics;
+	}
+	
+	public LinkedList<Double> getListScore(int level){
+		return DatabaseInteraction.getInstance().getScoreListByLevel(level);
 	}
 }

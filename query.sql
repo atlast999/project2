@@ -1,4 +1,4 @@
-CREATE DATABASE OOP;
+--CREATE DATABASE OOP;
 CREATE TABLE topic (
 	level int NOT NULL,
    	topicId int NOT NULL,
@@ -16,13 +16,24 @@ CREATE TABLE track (
 	CONSTRAINT primaryKey2 PRIMARY KEY(trackId, topicId)
 );
 
+CREATE TABLE score (
+	level int not null,
+	value int not null,
+	created_at datetime not null
+		DEFAULT CURRENT_TIMESTAMP
+	primary key(level, created_at)
+);
+
+
+
 INSERT INTO topic VALUES
 (1, 1, 58, 'Try to sleep', 'Norma went to bed. It was eleven o’clock...'),
 (1, 2, 58, 'Red, White and Blue', 'Tracy looked at the flag. The flag is red, white, and blue...'),
 (1, 3, 58, 'A Thin Man', 'Richard is a light eater. He doesn’t eat much...'),
 
 (2, 4, 81, 'Thank you mom', 'I love my mom. She took care of me when I was very young...'),
-(2, 5, 60, 'Cold Weather', 'Thomas was not hot. He was not warm either...'),
+--(2, 5, 60, 'Cold Weather', 'Thomas was not hot. He was not warm either...'),
+(2, 5, 10, 'Cold Weather', 'Thomas was not hot. He was not warm either...'),
 (2, 6, 59, 'New Shoes', 'Lisa loves to go shopping. Tomorrow she is going shopping...'),
 
 (3, 7, 63, 'Benjamin Franklin', 'Benjamin Franklin was one of the most famous people in American history...'),
@@ -30,9 +41,9 @@ INSERT INTO topic VALUES
 (3, 9, 81, 'William Shakespeare', 'There have been many great writers in the history of English literature...')
 
 INSERT INTO track VALUES
-(1, 1, 'track1_1', 'Norma went to bed. It was eleven o''clock. Norma turned out the light.', 'Norma'),
+(1, 1, 'track1_1', 'Norma went to bed. It was eleven o''clock. She turned out the light.', 'Norma'),
 (1, 2, 'track1_2', 'She lay in bed. It was dark. It was quiet. She couldn''t sleep. She closed her eyes. She tried to sleep, but she couldn''t.', ''),
-(1, 3, 'track1_3', 'Norma turned the light back on. She opened her book. Norma started to read her book. It was a good book. She read one page. Then she read another page.', 'Norma'),
+(1, 3, 'track1_3', 'She turned the light back on. She opened her book. Norma started to read her book. It was a good book. She read one page. Then she read another page.', 'Norma'),
 (1, 4, 'track1_4', 'After a while, she felt sleepy. She closed the book. She turned out the light. She closed her eyes. She went straight to sleep.', ''),
 
 (2, 1, 'track2_1', 'Tracy looked at the flag. The flag is red, white, and blue. It has 50 white stars.', 'Tracy'),
@@ -52,11 +63,20 @@ INSERT INTO track VALUES
 (4, 5, 'track4_5', 'She helped me with my homework. She was nice to all my friends. She always cheered me up. Next year I will graduate from high school.',''),
 (4, 6, 'track4_6', 'I will go to college. I will do well in college. I will do well after college. My mom has taught me well.',''),
 
+
+(5, 1, 'track5_1', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', ''),
+(5, 2, 'track5_2', 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', ''),
+(5, 3, 'track5_3', 'cccccccccccccccccccccccccccccccccccc',''),
+(5, 4, 'track5_4', 'dddddddddddddddddddddddddddddddddddd', ''),
+(5, 5, 'track5_5', 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',''),
+
+/*
 (5, 1, 'track5_1', 'Thomas was not hot. He was not warm either. He was cold. The weather was not hot. The weather was not warm', ''),
 (5, 2, 'track5_2', 'The weather was cold. Thomas did not like to be cold, he look for his jacket, he found his jacket, he put on', ''),
 (5, 3, 'track5_3', 'But he was still cold. He looked at the windows. Were all the windows closed? Yes, they were.',''),
 (5, 4, 'track5_4', 'They were all closed. None of the windows were open. He looked at the door. The door wasn’t open.', ''),
 (5, 5, 'track5_5', 'It was closed. He was still cold. He looked for a warmer jacket.',''),
+*/
 
 (6, 1, 'track6_1', 'Lisa loves to go shopping. Tomorrow she is going shopping. She needs a new pair of shoes. She wants to buy a pair of red shoes.', ''),
 (6, 2, 'track6_2', 'She thinks red shoes are pretty. She will buy a pair of shoes at the mall. Lisa usually shops at the mall.', ''),

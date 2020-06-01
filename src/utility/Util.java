@@ -23,7 +23,6 @@ public class Util {
 	}
 
 	public static boolean areWordsMatching(String answer, String target) {
-		String newTarget = null;
 		for(char ch : extraCharacter) {
 			if(ch == target.charAt(target.length() - 1)) {
 //				newTarget = target.substring(0, target.length() - 1);
@@ -37,9 +36,9 @@ public class Util {
 		return Calendar.getInstance().getTimeInMillis()/1000;
 	}
 
-	public static String calculateScore(long x, int y) {
+	public static long calculateScore(long x, int y) {
 		double result = 10 * (11 - (double)x/y);
-		return "" + Math.round(result);
+		return Math.round(result);
 	}
 
 	public static boolean isCurrentWordFree(String target, Track currentTrack) {

@@ -2,6 +2,7 @@ package repository;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import model.Topic;
 import model.Track;
@@ -78,4 +79,31 @@ public class DatabaseInteraction {
         }
         return list;
     }
+
+	public LinkedList<Double> getScoreListByLevel(int level) {
+		LinkedList<Double> list = new LinkedList<Double>();
+		String select = "select top 30 * from score where level=? order by created_at desc";
+		try {
+			PreparedStatement ps = c.prepareStatement(select);
+			ps.setInt(1, level);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				list.addFirst(rs.getDouble("value"));
+			}
+		} catch (Exception e) {
+		}
+//		System.out.println(list.toString());
+		return list;
+	}
+
+	public void addNewScore(int currentLevel, long score) {
+		String insert = "insert into score(level,value) values (" + currentLevel + "," + score + ")";
+		try {
+			PreparedStatement ps = c.prepareStatement(insert);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
 }

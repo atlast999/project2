@@ -2,8 +2,8 @@ package controller;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -18,13 +18,16 @@ import javax.swing.table.DefaultTableModel;
 
 import model.Topic;
 import model.Track;
+import repository.DatabaseInteraction;
 import repository.Repo;
 import utility.GraphPanel;
 import utility.SoundPlayer;
 import utility.Util;
 
 public class PracticingController {
+	private LinkedList<Double> listScores;
 	private ArrayList<Topic> listTopics;
+	private int currentLevel;
 	private Topic currentTopic;
 	private int currentTrackNumber;
 	private int currentWord;
@@ -36,11 +39,14 @@ public class PracticingController {
 	private boolean isCurrentTopicFinished;
 	private SoundPlayer player;
 	private JLabel lblTrack, lblScore;
-	JTextArea lblAnswer;
+	private JTextArea lblAnswer;
 	private JButton btnPlay;
+	private JTextField textFieldAnswer;
 
 	
-	public PracticingController(int level) {
+	public PracticingController(int level, LinkedList<Double> listScores) {
+		this.currentLevel = level;
+		this.listScores = listScores;
 		ArrayList<Topic> allTopics = Repo.getInstance().getListTopics();
 		listTopics = new ArrayList<Topic>();
 		for (Topic topic : allTopics) {
@@ -65,6 +71,10 @@ public class PracticingController {
 	}
 
 	public void startPracticing(JTextField textFieldAnswer, JLabel lblTrack, JLabel lblScore, JTextArea lblContentTrack, JButton btnPlay) {
+		if(currentTopic == null) {
+			JOptionPane.showMessageDialog(null, "Choose a topic, please!");
+			return;
+		}
 		this.lblAnswer = lblContentTrack;
 		this.lblTrack = lblTrack;
 		this.btnPlay = btnPlay;
@@ -96,6 +106,7 @@ public class PracticingController {
 	
 
 	public void handleEnteredAnswer(JTextField textFieldAnswer) {
+		this.textFieldAnswer = textFieldAnswer;
 		Track currentTrack = currentTopic.getTrackList().get(currentTrackNumber);
 		
 		String target = currentTrack.getScripts()[currentWord];
@@ -105,35 +116,31 @@ public class PracticingController {
 		
 		String previousAnswer = answer.substring(0, answer.length() - 1);
 		currentChar = previousAnswer.length();
-		
+
 		
 		if (Character.toLowerCase(answer.charAt(currentChar)) != Character.toLowerCase(target.charAt(currentChar))) {
-			Runnable doAssist = new Runnable() {
-	            @Override
-	            public void run() {
-	    			textFieldAnswer.setText(previousAnswer);
-	            }
-	        };
-	        SwingUtilities.invokeLater(doAssist);
+			updateAnswerBox(previousAnswer);
 		}
 		
 		if(Util.areWordsMatching(answer, target) || Util.isCurrentWordFree(target, currentTrack)) {
 			currentWord++;
-			Runnable doAssist = new Runnable() {
-	            @Override
-	            public void run() {
-	    			textFieldAnswer.setText("");
-	    			updateLabelAnswer(target);
-	    			if(currentWord >= currentTrack.getScripts().length) {
-	    				handleTrackFinished();
-	    			}
-	            }
-	        };
-	        SwingUtilities.invokeLater(doAssist);
+			updateLabelAnswer(target);
+			if(currentWord >= currentTrack.getScripts().length) {
+				handleTrackFinished();
+			}
+			updateAnswerBox("");
 		}
 	}
 	
-	
+	private void updateAnswerBox(String text) {
+		Runnable doAssist = new Runnable() {
+            @Override
+            public void run() {
+    			textFieldAnswer.setText(text);
+            }
+        };
+        SwingUtilities.invokeLater(doAssist);
+	}
 	
 	private void updateLabelTrack() {
 		String result = "Track: " + (currentTrackNumber+1) + " of " + currentTopic.getTrackList().size();
@@ -152,11 +159,20 @@ public class PracticingController {
 	}
 	private void updateScoreLabel() {
 		System.out.println(startingTime + " " + finishingTime);
-		String result = Util.calculateScore(finishingTime - startingTime, currentTopic.getLength());
-		lblScore.setText(result);
+		long result = Util.calculateScore(finishingTime - startingTime, currentTopic.getLength());
+		handleScoreList(result);
+		lblScore.setText("" + result);
+	}
+	private void handleScoreList(long result) {
+		if(listScores.size() < 30) {
+			listScores.addLast(1.0 * result);
+		}else {
+			listScores.removeFirst();
+			listScores.addLast(1.0 * result);
+		}
+		DatabaseInteraction.getInstance().addNewScore(currentLevel, result);
 	}
 	private void playFile(int trackNumber) {
-		//TODO code for playing mp3 file
 		String fileName = currentTopic.getTrackList().get(trackNumber).getFileName();
 		player = new SoundPlayer("WAV/" + fileName + ".wav");
 		btnPlay.setText("Stop");
@@ -185,19 +201,19 @@ public class PracticingController {
 	}
 
 	public void showChart() {
-		 List<Double> scores = new ArrayList<>();
-	        Random random = new Random();
-	        int maxDataPoints = 30;
-	        int maxScore = 1;
-	        for (int i = 0; i < maxDataPoints; i++) {
-	            scores.add((double) random.nextDouble() * maxScore);
-	        }
+			List<Double> scores = new ArrayList<>(listScores);
 	        JPanel panelChart = new GraphPanel(scores);
 	        panelChart.setPreferredSize(new Dimension(800, 600));
-	        JFrame frame = new JFrame("DrawGraph");
+	        JFrame frame = new JFrame("The 30 most recent scores in level " + currentLevel);
 	        frame.getContentPane().add(panelChart);
 	        frame.pack();
 	        frame.setLocationRelativeTo(null);
 	        frame.setVisible(true);
+	}
+
+	public void stopPracticing() {
+		if(player != null) {
+			player.stop();
+		}
 	}
 }

@@ -11,6 +11,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 import controller.PracticingController;
+import repository.Repo;
 import utility.GraphPanel;
 
 import javax.swing.JLabel;
@@ -25,6 +26,9 @@ import javax.swing.JTextField;
 import java.awt.event.InputMethodListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.LinkedList;
 import java.util.Vector;
 import java.awt.event.InputMethodEvent;
 import java.awt.event.ActionListener;
@@ -48,12 +52,21 @@ public class Practicing extends JFrame {
 	private JTextArea lblContentTrack;
 	private JButton btnPlay;
 	private JPanel panelScore;
+	private LinkedList<Double> listScores;
+	private boolean isPracticing;
 	public Practicing(int level) {
-		controller = new PracticingController(level);
+		listScores = Repo.getInstance().getListScore(level);
+		controller = new PracticingController(level, listScores);
 		
 		setLocationRelativeTo(null);
 		setTitle("Practice listening level "+level);
 //		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				controller.stopPracticing();
+			}
+		});
 		setBounds(100, 100, 865, 554);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -98,7 +111,12 @@ public class Practicing extends JFrame {
 		//add event listener when user click this button
 		btnGo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(isPracticing) {
+					JOptionPane.showMessageDialog(null, "Wanna give up?");
+					controller.stopPracticing();
+				}
 				controller.startPracticing(textFieldAnswer, lblTrack, lblScore, lblContentTrack, btnPlay);
+				isPracticing = true;
 			}
 		});
 		panelTopicList.add(btnGo, BorderLayout.SOUTH);
