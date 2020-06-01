@@ -1,11 +1,17 @@
 package controller;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.Vector;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
@@ -13,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 import model.Topic;
 import model.Track;
 import repository.Repo;
+import utility.GraphPanel;
 import utility.SoundPlayer;
 import utility.Util;
 
@@ -28,8 +35,10 @@ public class PracticingController {
 	private boolean isCurrentTrackFinished;
 	private boolean isCurrentTopicFinished;
 	private SoundPlayer player;
-	private JLabel lblTrack, lblAnswer, lblScore;
+	private JLabel lblTrack, lblScore;
+	JTextArea lblAnswer;
 	private JButton btnPlay;
+
 	
 	public PracticingController(int level) {
 		ArrayList<Topic> allTopics = Repo.getInstance().getListTopics();
@@ -55,8 +64,8 @@ public class PracticingController {
 		this.currentTopic = listTopics.get(row);
 	}
 
-	public void startPracticing(JTextField textFieldAnswer, JLabel lblTrack, JLabel lblScore, JLabel lblAnswer, JButton btnPlay) {
-		this.lblAnswer = lblAnswer;
+	public void startPracticing(JTextField textFieldAnswer, JLabel lblTrack, JLabel lblScore, JTextArea lblContentTrack, JButton btnPlay) {
+		this.lblAnswer = lblContentTrack;
 		this.lblTrack = lblTrack;
 		this.btnPlay = btnPlay;
 		this.lblScore = lblScore;
@@ -88,9 +97,12 @@ public class PracticingController {
 
 	public void handleEnteredAnswer(JTextField textFieldAnswer) {
 		Track currentTrack = currentTopic.getTrackList().get(currentTrackNumber);
+		
 		String target = currentTrack.getScripts()[currentWord];
 		String answer = textFieldAnswer.getText();
+		
 		System.out.println(answer + " " + target + " " + currentChar);
+		
 		String previousAnswer = answer.substring(0, answer.length() - 1);
 		currentChar = previousAnswer.length();
 		
@@ -105,7 +117,7 @@ public class PracticingController {
 	        SwingUtilities.invokeLater(doAssist);
 		}
 		
-		if(Util.areWordsMatching(answer, target)) {
+		if(Util.areWordsMatching(answer, target) || Util.isCurrentWordFree(target, currentTrack)) {
 			currentWord++;
 			Runnable doAssist = new Runnable() {
 	            @Override
@@ -133,6 +145,9 @@ public class PracticingController {
 			return;
 		}
 		String result = lblAnswer.getText() + " " + target;
+		if(currentWord % 13 == 0 ) {
+			result += "\n";
+		}
 		lblAnswer.setText(result);
 	}
 	private void updateScoreLabel() {
@@ -167,5 +182,22 @@ public class PracticingController {
 		this.finishingTime = Util.getCurrentTime();
 		updateScoreLabel();
 		JOptionPane.showMessageDialog(null, "Done topic");
+	}
+
+	public void showChart() {
+		 List<Double> scores = new ArrayList<>();
+	        Random random = new Random();
+	        int maxDataPoints = 30;
+	        int maxScore = 1;
+	        for (int i = 0; i < maxDataPoints; i++) {
+	            scores.add((double) random.nextDouble() * maxScore);
+	        }
+	        JPanel panelChart = new GraphPanel(scores);
+	        panelChart.setPreferredSize(new Dimension(800, 600));
+	        JFrame frame = new JFrame("DrawGraph");
+	        frame.getContentPane().add(panelChart);
+	        frame.pack();
+	        frame.setLocationRelativeTo(null);
+	        frame.setVisible(true);
 	}
 }

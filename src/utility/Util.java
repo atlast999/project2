@@ -2,6 +2,8 @@ package utility;
 
 import java.util.Calendar;
 
+import model.Track;
+
 public class Util {
 	private static final char[] extraCharacter = {'.', ',', '?', ':'};
 	public static String convertSecondToString(int second) {
@@ -38,5 +40,14 @@ public class Util {
 	public static String calculateScore(long x, int y) {
 		double result = 10 * (11 - (double)x/y);
 		return "" + Math.round(result);
+	}
+
+	public static boolean isCurrentWordFree(String target, Track currentTrack) {
+		for(String word : currentTrack.getFreeWords()) {
+			if(target.equalsIgnoreCase(word)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

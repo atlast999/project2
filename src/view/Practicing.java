@@ -11,12 +11,14 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 import controller.PracticingController;
+import utility.GraphPanel;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
@@ -43,15 +45,15 @@ public class Practicing extends JFrame {
 	private JTextField textFieldAnswer;
 	private JLabel lblTrack;
 	private JLabel lblScore;
-	private JLabel lblContentTrack;
+	private JTextArea lblContentTrack;
 	private JButton btnPlay;
-
+	private JPanel panelScore;
 	public Practicing(int level) {
 		controller = new PracticingController(level);
 		
 		setLocationRelativeTo(null);
 		setTitle("Practice listening level "+level);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 865, 554);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -143,7 +145,7 @@ public class Practicing extends JFrame {
 		panelPracticing.add(panel, BorderLayout.CENTER);
 		panel.setLayout(new BorderLayout(0, 0));
 		
-		lblContentTrack = new JLabel("Answer: ");
+		lblContentTrack = new JTextArea("answer:");
 		panel.add(lblContentTrack, BorderLayout.NORTH);
 		
 		btnPlay = new JButton("Play");
@@ -157,7 +159,7 @@ public class Practicing extends JFrame {
 		
 		panel.add(btnPlay);
 		
-		JPanel panelScore = new JPanel();
+		panelScore = new JPanel();
 		splitPane.setRightComponent(panelScore);
 		panelScore.setLayout(new BorderLayout(0, 0));
 		
@@ -168,6 +170,15 @@ public class Practicing extends JFrame {
 		lblScore = new JLabel("xx");
 		lblScore.setHorizontalAlignment(SwingConstants.CENTER);
 		panelScore.add(lblScore, BorderLayout.CENTER);
+		
+		JButton btnViewChart = new JButton("View Chart");
+		btnViewChart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				controller.showChart();
+			}
+		});
+		panelScore.add(btnViewChart, BorderLayout.SOUTH);
 		
 		
 	}

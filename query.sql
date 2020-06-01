@@ -30,9 +30,9 @@ INSERT INTO topic VALUES
 (3, 9, 81, 'William Shakespeare', 'There have been many great writers in the history of English literature...')
 
 INSERT INTO track VALUES
-(1, 1, 'track1_1', 'Norma went to bed. It was eleven o''clock. She turned out the light.', 'Norma'),
+(1, 1, 'track1_1', 'Norma went to bed. It was eleven o''clock. Norma turned out the light.', 'Norma'),
 (1, 2, 'track1_2', 'She lay in bed. It was dark. It was quiet. She couldn''t sleep. She closed her eyes. She tried to sleep, but she couldn''t.', ''),
-(1, 3, 'track1_3', 'She turned the light back on. She opened her book. She started to read her book. It was a good book. She read one page. Then she read another page.', ''),
+(1, 3, 'track1_3', 'Norma turned the light back on. She opened her book. Norma started to read her book. It was a good book. She read one page. Then she read another page.', 'Norma'),
 (1, 4, 'track1_4', 'After a while, she felt sleepy. She closed the book. She turned out the light. She closed her eyes. She went straight to sleep.', ''),
 
 (2, 1, 'track2_1', 'Tracy looked at the flag. The flag is red, white, and blue. It has 50 white stars.', 'Tracy'),
