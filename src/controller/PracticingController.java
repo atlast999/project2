@@ -35,6 +35,7 @@ public class PracticingController {
 	private int currentTrackNumber;
 	private int currentWord;
 	private int currentChar;
+	private int currentHintNumber;
 	private long startingTime;
 	private long finishingTime;
 	private boolean isPlaying;
@@ -53,6 +54,7 @@ public class PracticingController {
 		this.dictionary = new utility.Dictionary();
 		this.currentLevel = level;
 		this.listScores = listScores;
+		this.currentHintNumber = 10;
 		ArrayList<Topic> allTopics = Repo.getInstance().getListTopics();
 		listTopics = new ArrayList<Topic>();
 		for (Topic topic : allTopics) {
@@ -237,5 +239,15 @@ public class PracticingController {
 			result.append('\n');
 		}
 		textResult.setText(result.toString());
+	}
+
+	public void hint(JLabel labelHintNumber) {
+		if(currentHintNumber <= 0) {
+			return;
+		}
+		currentHintNumber--;
+		labelHintNumber.setText("" + currentHintNumber);
+		Track currentTrack = currentTopic.getTrackList().get(currentTrackNumber);
+		updateAnswerBox(currentTrack.getScripts()[currentWord]);
 	}
 }

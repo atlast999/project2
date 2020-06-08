@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
+import java.awt.FlowLayout;
 
 public class Practicing extends JFrame {
 	/**
@@ -41,7 +42,6 @@ public class Practicing extends JFrame {
 	
 	private JPanel contentPane;
 	private JTable tableListTopics;
-	private JTextField textFieldAnswer;
 	private JLabel lblTrack;
 	private JLabel lblScore;
 	private JTextArea lblContentTrack, textAreaResult;
@@ -51,6 +51,8 @@ public class Practicing extends JFrame {
 	private boolean isPracticing;
 	private JSplitPane splitPane_1;
 	private JTextField textFieldKeyword;
+	private JTextField textFieldAnswer;
+	private JLabel labelHintNumber;
 	public Practicing(int level, User user) {
 		listScores = Repo.getInstance().getListScore(level);
 		controller = new PracticingController(level, listScores, user);
@@ -93,28 +95,6 @@ public class Practicing extends JFrame {
 		lblTrack.setHorizontalAlignment(SwingConstants.CENTER);
 		panelPracticing.add(lblTrack, BorderLayout.NORTH);
 		
-		textFieldAnswer = new JTextField();
-		textFieldAnswer.getDocument().addDocumentListener(new DocumentListener() {
-			
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				controller.handleEnteredAnswer(textFieldAnswer);
-			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				//JOptionPane.showMessageDialog(null, "changed");
-			}
-		});
-		panelPracticing.add(textFieldAnswer, BorderLayout.SOUTH);
-		textFieldAnswer.setColumns(20);
-		
 		JPanel panel = new JPanel();
 		panelPracticing.add(panel, BorderLayout.CENTER);
 		panel.setLayout(new BorderLayout(0, 0));
@@ -132,6 +112,37 @@ public class Practicing extends JFrame {
 		btnPlay.setAlignmentY(Component.TOP_ALIGNMENT);
 		
 		panel.add(btnPlay);
+		
+		JPanel panel_2 = new JPanel();
+		panel.add(panel_2, BorderLayout.SOUTH);
+		panel_2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		textFieldAnswer = new JTextField();
+		textFieldAnswer.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+			}
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				controller.handleEnteredAnswer(textFieldAnswer);
+			}
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+			}
+		});
+		textFieldAnswer.setColumns(30);
+		panel_2.add(textFieldAnswer);
+		
+		JButton btnHint = new JButton("Hint");
+		btnHint.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controller.hint(labelHintNumber);
+			}
+		});
+		panel_2.add(btnHint);
+		
+		labelHintNumber = new JLabel("10");
+		panel_2.add(labelHintNumber);
 		
 		panelScore = new JPanel();
 		splitPane.setRightComponent(panelScore);

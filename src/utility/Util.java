@@ -29,7 +29,8 @@ public class Util {
 				target = target.substring(0, target.length() - 1);
 			}
 		}
-		return answer.equalsIgnoreCase(target);
+		return answer.toLowerCase().contains(target.toLowerCase());
+//		return answer.equalsIgnoreCase(target);
 	}
 
 	public static long getCurrentTime() {
