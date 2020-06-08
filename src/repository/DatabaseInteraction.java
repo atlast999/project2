@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 import model.Topic;
 import model.Track;
+import model.User;
 import utility.Util;
 
 public class DatabaseInteraction {
@@ -39,6 +40,26 @@ public class DatabaseInteraction {
 		return conn;
 	}
 	
+	
+	public User isLoginSuccessfull(String username, String password) {
+		String select = "select * from users where username=? and password=?";
+		User user = null;
+		try {
+			PreparedStatement ps = c.prepareStatement(select);
+			ps.setString(1, username);
+			ps.setString(2, password);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				int id = rs.getInt("id");
+				String name = rs.getString("name");
+				user = new User(id, name);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return user;
+	}
 	
     public ArrayList<Topic> getAllTopic() {
     	ArrayList<Topic> list = new ArrayList<>();
@@ -96,8 +117,8 @@ public class DatabaseInteraction {
 		return list;
 	}
 
-	public void addNewScore(int currentLevel, long score) {
-		String insert = "insert into score(level,value) values (" + currentLevel + "," + score + ")";
+	public void addNewScore(int owner, int currentLevel, long score) {
+		String insert = "insert into score(owner, level,value) values (" + owner + ","+ currentLevel + "," + score + ")";
 		try {
 			PreparedStatement ps = c.prepareStatement(insert);
 			ps.executeUpdate();

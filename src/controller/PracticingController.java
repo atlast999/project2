@@ -2,6 +2,7 @@ package controller;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
@@ -18,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 
 import model.Topic;
 import model.Track;
+import model.User;
 import repository.DatabaseInteraction;
 import repository.Repo;
 import utility.GraphPanel;
@@ -27,6 +29,7 @@ import utility.Util;
 public class PracticingController {
 	private LinkedList<Double> listScores;
 	private ArrayList<Topic> listTopics;
+	private User currentUser;
 	private int currentLevel;
 	private Topic currentTopic;
 	private int currentTrackNumber;
@@ -42,9 +45,12 @@ public class PracticingController {
 	private JTextArea lblAnswer;
 	private JButton btnPlay;
 	private JTextField textFieldAnswer;
+	private utility.Dictionary dictionary;
 
 	
-	public PracticingController(int level, LinkedList<Double> listScores) {
+	public PracticingController(int level, LinkedList<Double> listScores, User user) {
+		this.currentUser = user;
+		this.dictionary = new utility.Dictionary();
 		this.currentLevel = level;
 		this.listScores = listScores;
 		ArrayList<Topic> allTopics = Repo.getInstance().getListTopics();
@@ -170,7 +176,7 @@ public class PracticingController {
 			listScores.removeFirst();
 			listScores.addLast(1.0 * result);
 		}
-		DatabaseInteraction.getInstance().addNewScore(currentLevel, result);
+		DatabaseInteraction.getInstance().addNewScore(currentUser.getId(), currentLevel, result);
 	}
 	private void playFile(int trackNumber) {
 		String fileName = currentTopic.getTrackList().get(trackNumber).getFileName();
@@ -215,5 +221,21 @@ public class PracticingController {
 		if(player != null) {
 			player.stop();
 		}
+	}
+	
+	public void lookUpInDictionary(String keyword, JTextArea textResult) {
+		StringBuilder result = new StringBuilder();
+		ArrayList<String> res = dictionary.lookFor(keyword);
+		if(res == null) {
+			textResult.setText("Not found! Try another!");
+			return;
+		}
+		for(int i = 0; i<res.size(); i++) {
+			result.append(i+1);
+			result.append(". ");
+			result.append(res.get(i));
+			result.append('\n');
+		}
+		textResult.setText(result.toString());
 	}
 }

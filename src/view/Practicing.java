@@ -1,7 +1,6 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -11,8 +10,8 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 import controller.PracticingController;
+import model.User;
 import repository.Repo;
-import utility.GraphPanel;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,17 +22,13 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
-import java.awt.event.InputMethodListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.LinkedList;
-import java.util.Vector;
-import java.awt.event.InputMethodEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.BoxLayout;
 import java.awt.Component;
 
 public class Practicing extends JFrame {
@@ -49,16 +44,18 @@ public class Practicing extends JFrame {
 	private JTextField textFieldAnswer;
 	private JLabel lblTrack;
 	private JLabel lblScore;
-	private JTextArea lblContentTrack;
+	private JTextArea lblContentTrack, textAreaResult;
 	private JButton btnPlay;
 	private JPanel panelScore;
 	private LinkedList<Double> listScores;
 	private boolean isPracticing;
-	public Practicing(int level) {
+	private JSplitPane splitPane_1;
+	private JTextField textFieldKeyword;
+	public Practicing(int level, User user) {
 		listScores = Repo.getInstance().getListScore(level);
-		controller = new PracticingController(level, listScores);
+		controller = new PracticingController(level, listScores, user);
 		
-		setLocationRelativeTo(null);
+		
 		setTitle("Practice listening level "+level);
 //		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
@@ -72,54 +69,13 @@ public class Practicing extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
+		setLocationRelativeTo(null);
 		
 		JSplitPane splitPaneTopicsAndPracticing = new JSplitPane();
 		splitPaneTopicsAndPracticing.setResizeWeight(0.9);
 		splitPaneTopicsAndPracticing.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		contentPane.add(splitPaneTopicsAndPracticing, BorderLayout.CENTER);
 		
-		JPanel panelTopicList = new JPanel();
-		//contentPane.add(panelTopicList, BorderLayout.CENTER);
-		splitPaneTopicsAndPracticing.setLeftComponent(panelTopicList);
-		panelTopicList.setLayout(new BorderLayout(0, 0));
-		
-		JLabel lblNewLabel = new JLabel("List of topics");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		panelTopicList.add(lblNewLabel, BorderLayout.NORTH);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		panelTopicList.add(scrollPane, BorderLayout.CENTER);
-		
-		
-		dtmListTopics = new DefaultTableModel();
-		dtmListTopics.addColumn("Name");
-		dtmListTopics.addColumn("Length");
-		dtmListTopics.addColumn("Description");
-		tableListTopics = new JTable(dtmListTopics);
-		scrollPane.setViewportView(tableListTopics);
-		//show table
-		controller.showTableListTopics(dtmListTopics);
-		//add event listener when user choose a topic
-		tableListTopics.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int row = tableListTopics.getSelectedRow();
-				controller.setCurrentTopic(row);
-			}
-		});
-		JButton btnGo = new JButton("Let's go");
-		//add event listener when user click this button
-		btnGo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(isPracticing) {
-					JOptionPane.showMessageDialog(null, "Wanna give up?");
-					controller.stopPracticing();
-				}
-				controller.startPracticing(textFieldAnswer, lblTrack, lblScore, lblContentTrack, btnPlay);
-				isPracticing = true;
-			}
-		});
-		panelTopicList.add(btnGo, BorderLayout.SOUTH);
 		
 		
 		//----------------------------------------------------------------	
@@ -189,14 +145,103 @@ public class Practicing extends JFrame {
 		lblScore.setHorizontalAlignment(SwingConstants.CENTER);
 		panelScore.add(lblScore, BorderLayout.CENTER);
 		
-		JButton btnViewChart = new JButton("View Chart");
-		btnViewChart.addActionListener(new ActionListener() {
+		JPanel panel_1 = new JPanel();
+		panelScore.add(panel_1, BorderLayout.SOUTH);
+		
+		JButton btnChart = new JButton("Chart");
+		btnChart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				controller.showChart();
 			}
 		});
-		panelScore.add(btnViewChart, BorderLayout.SOUTH);
+		panel_1.add(btnChart);
+		
+		JButton btnHistory = new JButton("History");
+		panel_1.add(btnHistory);
+		
+		splitPane_1 = new JSplitPane();
+		splitPane_1.setResizeWeight(0.9);
+		splitPaneTopicsAndPracticing.setLeftComponent(splitPane_1);
+		
+		
+		JPanel panelTopicList = new JPanel();
+		//contentPane.add(panelTopicList, BorderLayout.CENTER);
+		splitPane_1.setLeftComponent(panelTopicList);
+		panelTopicList.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblNewLabel = new JLabel("List of topics");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		panelTopicList.add(lblNewLabel, BorderLayout.NORTH);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		panelTopicList.add(scrollPane, BorderLayout.CENTER);
+		
+		
+		dtmListTopics = new DefaultTableModel();
+		dtmListTopics.addColumn("Name");
+		dtmListTopics.addColumn("Length");
+		dtmListTopics.addColumn("Description");
+		tableListTopics = new JTable(dtmListTopics);
+		scrollPane.setViewportView(tableListTopics);
+		//show table
+		controller.showTableListTopics(dtmListTopics);
+		//add event listener when user choose a topic
+		tableListTopics.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row = tableListTopics.getSelectedRow();
+				controller.setCurrentTopic(row);
+			}
+		});
+		JButton btnGo = new JButton("Let's go");
+		//add event listener when user click this button
+		btnGo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(isPracticing) {
+					JOptionPane.showMessageDialog(null, "Wanna give up?");
+					controller.stopPracticing();
+				}
+				controller.startPracticing(textFieldAnswer, lblTrack, lblScore, lblContentTrack, btnPlay);
+				isPracticing = true;
+			}
+		});
+		panelTopicList.add(btnGo, BorderLayout.SOUTH);
+		
+		JPanel panelDictionary = new JPanel();
+		splitPane_1.setRightComponent(panelDictionary);
+		panelDictionary.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblDictionary = new JLabel("Dictionary");
+		lblDictionary.setHorizontalAlignment(SwingConstants.CENTER);
+		panelDictionary.add(lblDictionary, BorderLayout.NORTH);
+		
+		JPanel panelSearch = new JPanel();
+		panelDictionary.add(panelSearch, BorderLayout.CENTER);
+		panelSearch.setLayout(new BorderLayout(0, 0));
+		
+		JPanel panel_4 = new JPanel();
+		panelSearch.add(panel_4, BorderLayout.NORTH);
+		
+		textFieldKeyword = new JTextField();
+		panel_4.add(textFieldKeyword);
+		textFieldKeyword.setColumns(10);
+		
+		JButton btnSearch = new JButton("GO");
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controller.lookUpInDictionary(textFieldKeyword.getText(), textAreaResult);
+			}
+		});
+		panel_4.add(btnSearch);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		panelSearch.add(scrollPane_1, BorderLayout.CENTER);
+		
+		textAreaResult = new JTextArea();
+		textAreaResult.setLineWrap(true);
+		textAreaResult.setWrapStyleWord(true);
+		scrollPane_1.setViewportView(textAreaResult);
+		
 		
 		
 	}

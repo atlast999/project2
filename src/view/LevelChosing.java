@@ -9,12 +9,15 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.LevelController;
+import model.User;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JButton;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.FlowLayout;
+import javax.swing.SwingConstants;
 
 public class LevelChosing extends JFrame implements MouseListener {
 	
@@ -22,6 +25,7 @@ public class LevelChosing extends JFrame implements MouseListener {
 	private LevelController controller;
 	private JPanel contentPane;
 	private JButton btnLevelOne , btnLevelTwo, btnLevelThree;
+	private User currentUser;
 
 	/**
 	 * Launch the application.
@@ -30,20 +34,23 @@ public class LevelChosing extends JFrame implements MouseListener {
 	/**
 	 * Create the frame.
 	 */
-	public LevelChosing() {
-		controller = new LevelController();
-		setLocationRelativeTo(null);
+	public LevelChosing(User user) {
+		this.currentUser = user;
+		this.controller = new LevelController();
+		
 		setTitle("Practice English listening skills");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 639, 486);
+		setBounds(100, 100, 641, 308);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(new BorderLayout(0, 0));
+		contentPane.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		setLocationRelativeTo(null);
 		
 		JMenuBar menuBar = new JMenuBar();
-		contentPane.add(menuBar, BorderLayout.NORTH);
+		contentPane.add(menuBar);
 		JMenu mnHelp = new JMenu("Help");
+		mnHelp.setHorizontalAlignment(SwingConstants.LEFT);
 		menuBar.add(mnHelp);
 		
 		JMenuItem mntmDirection = new JMenuItem("Direction");
@@ -54,21 +61,21 @@ public class LevelChosing extends JFrame implements MouseListener {
 		
 		
 		JPanel panel = new JPanel();
-		contentPane.add(panel, BorderLayout.CENTER);
+		contentPane.add(panel);
 		
-		btnLevelOne = new JButton("Level 1");
+		btnLevelOne = new JButton("Level 1 (Beginner)");
 		btnLevelOne.addMouseListener(this);
 				
 		btnLevelOne.setPreferredSize(new Dimension(200, 200));
 		panel.add(btnLevelOne);
 		
 		
-		btnLevelTwo = new JButton("Level 2");
+		btnLevelTwo = new JButton("Level 2 (Intermediate)");
 		btnLevelTwo.setPreferredSize(new Dimension(200, 200));
 		btnLevelTwo.addMouseListener(this);
 		panel.add(btnLevelTwo);
 		
-		btnLevelThree = new JButton("Level 3");
+		btnLevelThree = new JButton("Level 3 (Advanced)");
 		btnLevelThree.setPreferredSize(new Dimension(200, 200));
 		btnLevelThree.addMouseListener(this);
 		panel.add(btnLevelThree);
@@ -79,13 +86,13 @@ public class LevelChosing extends JFrame implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if(e.getComponent().equals(btnLevelOne)) {
-			controller.moveToPracticing(1);
+			controller.moveToPracticing(1, currentUser);
 		}
 		if(e.getComponent().equals(btnLevelTwo)) {
-			controller.moveToPracticing(2);
+			controller.moveToPracticing(2, currentUser);
 		}
 		if(e.getComponent().equals(btnLevelThree)) {
-			controller.moveToPracticing(3);
+			controller.moveToPracticing(3, currentUser);
 		}
 	}
 
