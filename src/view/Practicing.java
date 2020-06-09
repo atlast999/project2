@@ -168,6 +168,11 @@ public class Practicing extends JFrame {
 		panel_1.add(btnChart);
 		
 		JButton btnHistory = new JButton("History");
+		btnHistory.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controller.showHistory();
+			}
+		});
 		panel_1.add(btnHistory);
 		
 		splitPane_1 = new JSplitPane();

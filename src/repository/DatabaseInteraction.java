@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import model.Activity;
 import model.Topic;
 import model.Track;
 import model.User;
@@ -117,8 +118,31 @@ public class DatabaseInteraction {
 		return list;
 	}
 
-	public void addNewScore(int owner, int currentLevel, long score) {
-		String insert = "insert into score(owner, level,value) values (" + owner + ","+ currentLevel + "," + score + ")";
+	public ArrayList<Activity> getScoreListByUserId(int userId) {
+		ArrayList<Activity> list = new ArrayList<Activity>();
+		String select = "select * from score where owner=? order by created_at desc";
+		try {
+			PreparedStatement ps = c.prepareStatement(select);
+			ps.setInt(1, userId);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				String time = rs.getString("created_at");
+				int level = rs.getInt("level");
+				String topicName = rs.getString("topicName");
+				int score = rs.getInt("value");
+				Activity activity = new Activity(time, level, topicName, score);
+				list.add(activity);
+			}
+		} catch (Exception e) {
+			return null;
+		}
+//		System.out.println(list.toString());
+		return list;
+	}
+	
+	public void addNewScore(int owner, int currentLevel,String topicName, long score) {
+		String insert = "insert into score(owner,level,topicName,value) values (" + owner + ","+ currentLevel + ",'" + topicName + "'," + score + ")";
+		System.out.println(insert);
 		try {
 			PreparedStatement ps = c.prepareStatement(insert);
 			ps.executeUpdate();

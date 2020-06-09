@@ -92,6 +92,7 @@ public class Login extends JFrame {
 		//for testing
 		if(username.equals(password)) {
 			user = new User();
+			user.setId(1);
 		}
 		
 		if(user == null) {

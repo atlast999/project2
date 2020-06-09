@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
+import model.Activity;
 import model.Topic;
 import model.Track;
 import model.User;
@@ -25,6 +26,7 @@ import repository.Repo;
 import utility.GraphPanel;
 import utility.SoundPlayer;
 import utility.Util;
+import view.History;
 
 public class PracticingController {
 	private LinkedList<Double> listScores;
@@ -178,7 +180,7 @@ public class PracticingController {
 			listScores.removeFirst();
 			listScores.addLast(1.0 * result);
 		}
-		DatabaseInteraction.getInstance().addNewScore(currentUser.getId(), currentLevel, result);
+		DatabaseInteraction.getInstance().addNewScore(currentUser.getId(), currentLevel, currentTopic.getName(), result);
 	}
 	private void playFile(int trackNumber) {
 		String fileName = currentTopic.getTrackList().get(trackNumber).getFileName();
@@ -249,5 +251,11 @@ public class PracticingController {
 		labelHintNumber.setText("" + currentHintNumber);
 		Track currentTrack = currentTopic.getTrackList().get(currentTrackNumber);
 		updateAnswerBox(currentTrack.getScripts()[currentWord]);
+	}
+
+	public void showHistory() {
+		ArrayList<Activity> listActivities = DatabaseInteraction.getInstance().getScoreListByUserId(currentUser.getId());
+		History frame = new History(currentUser, listActivities);
+		frame.setVisible(true);
 	}
 }

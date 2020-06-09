@@ -32,7 +32,7 @@ public class Main {
 //				}
 //				double hs = 0.1*row + 3;
 //				int score = (int) Math.round(15*Math.cos((hs*Math.PI)/3) + 65);
-//				DatabaseInteraction.getInstance().addNewScore(1, level, score);
+//				DatabaseInteraction.getInstance().addNewScore(1, level,"Love yourself", score);
 //			}
 //		}
 		
