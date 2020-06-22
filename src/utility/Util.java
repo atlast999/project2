@@ -25,12 +25,10 @@ public class Util {
 	public static boolean areWordsMatching(String answer, String target) {
 		for(char ch : extraCharacter) {
 			if(ch == target.charAt(target.length() - 1)) {
-//				newTarget = target.substring(0, target.length() - 1);
 				target = target.substring(0, target.length() - 1);
 			}
 		}
 		return answer.toLowerCase().contains(target.toLowerCase());
-//		return answer.equalsIgnoreCase(target);
 	}
 
 	public static long getCurrentTime() {

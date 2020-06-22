@@ -120,7 +120,7 @@ public class DatabaseInteraction {
 
 	public ArrayList<Activity> getScoreListByUserId(int userId) {
 		ArrayList<Activity> list = new ArrayList<Activity>();
-		String select = "select * from score where owner=? order by created_at desc";
+		String select = "select * from score,topic where score.topicName=topic.name and owner=? order by created_at desc";
 		try {
 			PreparedStatement ps = c.prepareStatement(select);
 			ps.setInt(1, userId);
@@ -130,10 +130,13 @@ public class DatabaseInteraction {
 				int level = rs.getInt("level");
 				String topicName = rs.getString("topicName");
 				int score = rs.getInt("value");
-				Activity activity = new Activity(time, level, topicName, score);
+				int topicId = rs.getInt("topicId");
+//				System.out.println(topicName);
+				Activity activity = new Activity(time, level, topicName, score, topicId);
 				list.add(activity);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 //		System.out.println(list.toString());
@@ -150,5 +153,28 @@ public class DatabaseInteraction {
 			e.printStackTrace();
 		}
 		
+	}
+
+	public ArrayList<Topic> getLeftoverTopic(int userId) {
+		ArrayList<Topic> list = new ArrayList<>();
+        String select = "select * from topic where name not in (select distinct topicName from score where owner=?)";
+        try (
+            PreparedStatement ps = c.prepareStatement(select)) {
+        	ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+            	Topic topic = new Topic();
+            	topic.setTopicId(rs.getInt("topicId"));
+            	topic.setLength(rs.getInt("length"));
+            	topic.setName(rs.getString("name"));
+            	topic.setDescription(rs.getString("description"));
+            	topic.setLevel(rs.getInt("level"));
+                list.add(topic);
+//                System.out.println(topic.getName());
+            }
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
+        return list;
 	}
 }

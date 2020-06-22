@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
@@ -21,7 +22,7 @@ public class Login extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textFieldUsername;
-	private JTextField textFieldPassword;
+	private JPasswordField textFieldPassword;
 
 	public Login() {
 		
@@ -48,7 +49,7 @@ public class Login extends JFrame {
 		lblPassword.setBounds(20, 166, 77, 23);
 		contentPane.add(lblPassword);
 		
-		textFieldPassword = new JTextField();
+		textFieldPassword = new JPasswordField();
 		textFieldPassword.setBounds(107, 164, 125, 20);
 		contentPane.add(textFieldPassword);
 		textFieldPassword.setColumns(10);
@@ -83,6 +84,7 @@ public class Login extends JFrame {
 				processLogin();
 			}
 		});
+		
 	}
 
 	protected void processLogin() {

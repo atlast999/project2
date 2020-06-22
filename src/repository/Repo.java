@@ -17,8 +17,6 @@ public class Repo {
 		return instance;
 	}
 	public Repo() {
-		//get data from database, not yet, just hard coding
-		//
 		listTopics = DatabaseInteraction.getInstance().getAllTopic();
 	}
 	

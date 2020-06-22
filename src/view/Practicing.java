@@ -10,6 +10,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 import controller.PracticingController;
+import model.Topic;
 import model.User;
 import repository.Repo;
 
@@ -33,9 +34,6 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 
 public class Practicing extends JFrame {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private PracticingController controller;
 	private DefaultTableModel dtmListTopics;
@@ -45,7 +43,6 @@ public class Practicing extends JFrame {
 	private JLabel lblTrack;
 	private JLabel lblScore;
 	private JTextArea lblContentTrack, textAreaResult;
-	private JButton btnPlay;
 	private JPanel panelScore;
 	private LinkedList<Double> listScores;
 	private boolean isPracticing;
@@ -53,6 +50,16 @@ public class Practicing extends JFrame {
 	private JTextField textFieldKeyword;
 	private JTextField textFieldAnswer;
 	private JLabel labelHintNumber;
+	private JButton btnPlay;
+//	private int testMode;
+//	public Practicing(int level, User user, int currentTopicId) {
+//		this(level, user);
+//		Topic curTopic = this.getTopicById(currentTopicId);
+//		System.out.println(curTopic.getName());
+//		controller.setCurrentTopic(curTopic);
+//		controller.startPracticing(textFieldAnswer, lblTrack, lblScore, lblContentTrack, btnPlay);
+//	}
+
 	public Practicing(int level, User user) {
 		listScores = Repo.getInstance().getListScore(level);
 		controller = new PracticingController(level, listScores, user);
@@ -84,7 +91,6 @@ public class Practicing extends JFrame {
 		
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setResizeWeight(0.4);
-//		contentPane.add(splitPane, BorderLayout.SOUTH);
 		splitPaneTopicsAndPracticing.setRightComponent(splitPane);
 		
 		JPanel panelPracticing = new JPanel();
@@ -101,17 +107,6 @@ public class Practicing extends JFrame {
 		
 		lblContentTrack = new JTextArea("answer:");
 		panel.add(lblContentTrack, BorderLayout.NORTH);
-		
-		btnPlay = new JButton("Play");
-		//when user click play/pause
-		btnPlay.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				controller.handlePlayPauseButton();
-			}
-		});
-		btnPlay.setAlignmentY(Component.TOP_ALIGNMENT);
-		
-		panel.add(btnPlay);
 		
 		JPanel panel_2 = new JPanel();
 		panel.add(panel_2, BorderLayout.SOUTH);
@@ -144,6 +139,29 @@ public class Practicing extends JFrame {
 		labelHintNumber = new JLabel("10");
 		panel_2.add(labelHintNumber);
 		
+		JPanel panel_3 = new JPanel();
+		panel.add(panel_3, BorderLayout.CENTER);
+		panel_3.setLayout(null);
+		
+		btnPlay = new JButton("Play");
+		btnPlay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controller.handlePlayPauseButton();
+			}
+		});
+		btnPlay.setBounds(181, 5, 60, 23);
+		btnPlay.setAlignmentY(0.0f);
+		panel_3.add(btnPlay);
+		
+		JButton btnNext = new JButton("Next");
+		btnNext.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controller.handleNextButton();
+			}
+		});
+		btnNext.setBounds(245, 5, 71, 23);
+		panel_3.add(btnNext);
+		
 		panelScore = new JPanel();
 		splitPane.setRightComponent(panelScore);
 		panelScore.setLayout(new BorderLayout(0, 0));
@@ -170,7 +188,7 @@ public class Practicing extends JFrame {
 		JButton btnHistory = new JButton("History");
 		btnHistory.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.showHistory();
+				controller.showHistory(Practicing.this);
 			}
 		});
 		panel_1.add(btnHistory);
@@ -181,7 +199,6 @@ public class Practicing extends JFrame {
 		
 		
 		JPanel panelTopicList = new JPanel();
-		//contentPane.add(panelTopicList, BorderLayout.CENTER);
 		splitPane_1.setLeftComponent(panelTopicList);
 		panelTopicList.setLayout(new BorderLayout(0, 0));
 		
@@ -206,11 +223,11 @@ public class Practicing extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int row = tableListTopics.getSelectedRow();
-				controller.setCurrentTopic(row);
+				Topic curTopic = controller.getListTopics().get(row);
+				controller.setCurrentTopic(curTopic);
 			}
 		});
 		JButton btnGo = new JButton("Let's go");
-		//add event listener when user click this button
 		btnGo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(isPracticing) {
@@ -258,8 +275,11 @@ public class Practicing extends JFrame {
 		textAreaResult.setWrapStyleWord(true);
 		scrollPane_1.setViewportView(textAreaResult);
 		
-		
-		
 	}
-
+	public void init(int selectedTopic) {
+		Topic curTopic = controller.getTopicById(selectedTopic);
+		System.out.println(curTopic.getName());
+		controller.setCurrentTopic(curTopic);
+		controller.startPracticing(textFieldAnswer, lblTrack, lblScore, lblContentTrack, btnPlay);
+	}
 }

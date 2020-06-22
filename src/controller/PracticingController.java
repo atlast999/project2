@@ -2,7 +2,6 @@ package controller;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
@@ -27,6 +26,7 @@ import utility.GraphPanel;
 import utility.SoundPlayer;
 import utility.Util;
 import view.History;
+import view.Practicing;
 
 public class PracticingController {
 	private LinkedList<Double> listScores;
@@ -76,8 +76,8 @@ public class PracticingController {
 		}
 	}
 	
-	public void setCurrentTopic(int row) {
-		this.currentTopic = listTopics.get(row);
+	public void setCurrentTopic(Topic curTopic) {
+		this.currentTopic = curTopic;
 	}
 
 	public void startPracticing(JTextField textFieldAnswer, JLabel lblTrack, JLabel lblScore, JTextArea lblContentTrack, JButton btnPlay) {
@@ -97,12 +97,6 @@ public class PracticingController {
 	}
 	
 	public void handlePlayPauseButton() {
-		if(isCurrentTrackFinished && !isCurrentTopicFinished) {
-			currentTrackNumber++;
-			updateLabelTrack();
-			playFile(currentTrackNumber);
-			return;
-		}
 		if(isPlaying) {
 			btnPlay.setText("Play");
 			player.suspend();
@@ -111,6 +105,14 @@ public class PracticingController {
 			btnPlay.setText("Stop");
 			player.resume();
 			isPlaying = true;
+		}
+	}
+	public void handleNextButton() {
+		if(isCurrentTrackFinished && !isCurrentTopicFinished) {
+			currentTrackNumber++;
+			updateLabelTrack();
+			playFile(currentTrackNumber);
+			return;
 		}
 	}
 	
@@ -253,9 +255,23 @@ public class PracticingController {
 		updateAnswerBox(currentTrack.getScripts()[currentWord]);
 	}
 
-	public void showHistory() {
+	public void showHistory(Practicing curPracticing) {
 		ArrayList<Activity> listActivities = DatabaseInteraction.getInstance().getScoreListByUserId(currentUser.getId());
-		History frame = new History(currentUser, listActivities);
+		History frame = new History(currentUser, listActivities, curPracticing);
 		frame.setVisible(true);
 	}
+	
+	public ArrayList<Topic> getListTopics() {
+		return listTopics;
+	}
+	public Topic getTopicById(int topicId) {
+		for(Topic topic : listTopics) {
+			if(topic.getTopicId() == topicId) {
+				return topic;
+			}
+		}
+		return null;
+	}
+
+	
 }

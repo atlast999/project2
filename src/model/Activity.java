@@ -5,17 +5,25 @@ public class Activity {
 	private int level;
 	private String topicName;
 	private int score;
-	
-	public Activity() {
-	}
-	public Activity(String time, int level, String topicName, int score) {
+	private int topicId;
+
+	public Activity(String time, int level, String topicName, int score, int topicId) {
 		super();
 		this.time = time;
 		this.level = level;
 		this.topicName = topicName;
 		this.score = score;
+		this.topicId = topicId;
 	}
 	
+	public int getTopicId() {
+		return topicId;
+	}
+	public void setTopicId(int topicId) {
+		this.topicId = topicId;
+	}
+	public Activity() {
+	}
 	public String getTime() {
 		return time;
 	}

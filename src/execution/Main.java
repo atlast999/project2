@@ -15,7 +15,6 @@ public class Main {
 			public void run() {
 				try {
 					Login frame = new Login();
-//					LevelChosing frame = new LevelChosing();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
